@@ -9,11 +9,24 @@ Version: 0.0.1
 
 function Activar() {
    
-
-    // TODO Conexion con la base de datos para crear las tablas necesarias 
     global $wpdb;
 
+    $tableprefix = $wpdb->prefix . 'tarifas';
+
+    $sql = "CREATE TABLE $tableprefix (
+            `tarifa_id` INT NOT NULL AUTO_INCREMENT,
+                `minutos` VARCHAR(15) NOT NULL ,
+                `gigas` VARCHAR(15) NOT NULL , 
+                `precio` INT(5) NOT NULL , 
+                PRIMARY KEY (`tarifa_id`));
+            );";
+
     
+
+    // Ejecutamos la consulta:
+   
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    dbDelta( $sql );
 
 }
 
@@ -34,23 +47,41 @@ function CrearMenu(){
             '1'
     );
     
-    add_submenu_page(
-        'sp_menu', // parent slug
-        'Ajustes', // Titulo
-        'Ajustes', // Titulo menu
-        'manage_options', //
-        'sp_menu_ajustes',
-        'Submenu'
-    );
 }
 
 function MostrarContenido() {
     echo "<h1>Contenido de la pagina</h1>";
 }
 
-function Submenu() {
-    echo "pruebas";
+function EncolarBootstrapJS($hook) {
+
+    wp_enqueue_script('bootstrapJS', plugins_url('tarifas-plugin\admin/bootstrap/js/bootstrap.min.js'),__FILE__,array('jquery'));
 }
+add_action("admin_enqueue_scripts", 'EncolarBootstrapJS');
+ 
+function EncolarBootstrapCSS($hook) {
+
+    wp_enqueue_style('bootstrapCSS', plugins_url('tarifas-plugin\admin/bootstrap/css/bootstrap.min.css'),__FILE__);
+}
+add_action("admin_enqueue_scripts", 'EncolarBootstrapCSS');
+
+function EncolarTarifasJs($hook) {
+
+    if ($hook != "tarifas-plugin/admin/principal.php") {
+        return;
+    }
+    wp_enqueue_script('tarifasJS', plugins_url('tarifas-plugin\admin\js\script-tarifas.js'),__FILE__,array('jquery'));
+}
+add_action("admin_enqueue_scripts", 'EncolarTarifasJs');
+
+
+
+
+function imprimirshortcode($atts) {
+    $_short = new codigocorto;
+
+}
+
 
 
 register_activation_hook(__FILE__, 'Activar');
