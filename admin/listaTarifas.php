@@ -14,13 +14,6 @@
             return $datos;
         }
 
-        public function inprimirShortcode() {
-            $_short = new shortcut;
-
-            
-
-        }
-
 
 
     }
