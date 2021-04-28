@@ -14,24 +14,25 @@
     <thead>
         <th><b>id tarifa</b></th>
         <th><b>minutos</b></th>
+        <th><b>gigas</b></th>
+        <th><b>precio</b></th>
     </thead>
     <tbody id="the-list">
                     <?php
                         
                         foreach ($lista as $key => $value) {
-                            $nombre = $value['tarifa_id'];
-                            $shortcode = $value['minutos'];
+                            $id = $value['tarifa_id'];
+                            $minutos = $value['minutos'];
+                            $gigas = $value['gigas'];
+                            $precio = $value['precio'];
                             echo "
                                 <tr>
-                                    <td>$nombre</td>
-                                    <td>$shortcode</td>
+                                    <td>$id</td>
+                                    <td>$minutos</td>
+                                    <td>$gigas</td>
+                                    <td>$precio</td>
                                 </tr>
                             ";    
-                        }
-
-                        function beta()
-                        {
-                            echo "dsfg";
                         }
                         
                     ?>
@@ -39,10 +40,9 @@
     </table>
                 
 
-    <div class="container">
-    <h2>Modal Example</h2>
+    <div class="container"><br>
     <!-- Trigger the modal with a button -->
-    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Launch modal</button>
+    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Nueva tarifa</button>
 
     <!-- Modal -->
     <div class="modal fade" id="myModal" role="dialog">
@@ -109,17 +109,18 @@
 
 if (isset($_POST['send'])) {
     
-    $tarifa_id = "[TAR_".$_POST['nombre']."]";
+    $tarifa_id = $_POST['nombre'];
     $minutos = 200;
     $gigas = 200;
     $precio = $_POST['precio'];
     
     $sql = "INSERT INTO `wp_tarifas`(`tarifa_id`, `minutos`, `gigas`, `precio`) VALUES ('$tarifa_id','$minutos','$gigas','$precio');";
     
+            
+    
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
     dbDelta( $sql );
 
 }
-echo "no";
 
 ?>

@@ -7,19 +7,29 @@ Description: Plugin de pruebas
 Version: 0.0.1
 */
 
+require_once dirname(__FILE__).'/clases/codigocorto.class.php';
+
 function Activar() {
    
     global $wpdb;
 
     $tableprefix = $wpdb->prefix . 'tarifas';
+    $moviles = $wpdb->prefix . 'moviles';
 
     $sql = "CREATE TABLE $tableprefix (
-            `tarifa_id` INT NOT NULL AUTO_INCREMENT,
+            `tarifa_id` INT NOT NULL,
                 `minutos` VARCHAR(15) NOT NULL ,
                 `gigas` VARCHAR(15) NOT NULL , 
                 `precio` INT(5) NOT NULL , 
                 PRIMARY KEY (`tarifa_id`));
-            );";
+            );
+            CREATE TABLE $moviles (
+            `movil_id` INT AUTO_INCREMENT PRIMARY KEY,
+            `tarifa_id` INT,
+                `minutos` VARCHAR(15) NOT NULL ,
+                `gigas` VARCHAR(15) NOT NULL ,
+                FOREIGN KEY (`tarifa_id`) REFERENCES $tableprefix(`tarifa_id`)
+                );";
 
     
 
@@ -79,10 +89,13 @@ add_action("admin_enqueue_scripts", 'EncolarTarifasJs');
 
 function imprimirshortcode($atts) {
     $_short = new codigocorto;
+    $id = $atts['id'];
 
+    $html = $_short->Generador($id);
+    return $html;
 }
 
-
+add_shortcode("PRU","imprimirshortcode");
 
 register_activation_hook(__FILE__, 'Activar');
 register_deactivation_hook(__FILE__, 'Desactivar');

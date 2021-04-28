@@ -17,9 +17,21 @@ window.onload = function() {
   tipoBloque.addEventListener("change", TipoBloque);
   numMoviles.addEventListener("blur", moviles);
 
-  document.getElementById("send").addEventListener("click", post);
+    fetch('https://cablemovil.es/tarifas/').then(function (response) {
+      // The API call was successful!
+      return response.text();
+    }).then(function (html) {
+    
+      // Convert the HTML string into a document object
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(html, 'text/html');
+      console.log(doc)
+    
+    }).catch(function (err) {
+      // There was an error
+      console.warn('Something went wrong.', err);
+    });
 
-  // Ajax promise para enviar los datos del formulario a script php que los guarda en la base de datos
 
 }
 
@@ -68,24 +80,18 @@ function TipoBloque() {
         contMoviles.innerHTML += "<br>"; 
       }
     }else if (tipoMovil.value == "compartido") {
-      for (let i = 0; i < numMoviles.value; i++) {
-        var nombre = document.createTextNode("Movil " + (i+1));
-        var gigas = document.createElement("input");
-              
-    
-        gigas.setAttribute("type", "number");
-        gigas.setAttribute("placeholder", "gigas")
-    
-        contMoviles.appendChild(nombre)
-        contMoviles.innerHTML += "<br>";
-        contMoviles.appendChild(gigas)
-        contMoviles.innerHTML += "<br>";
-      }
+
+      var gigas = document.createElement("input");
+      gigas.setAttribute("type", "number");
+      gigas.setAttribute("placeholder", "gigas")
+      contMoviles.appendChild(gigas)
+      contMoviles.innerHTML += "<br>";
+      
     }
 
   }
 
 
 function post() {
-  console.log("!")
+  
 }
